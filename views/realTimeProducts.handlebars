@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Real-time Products</title>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <h1>Real-time Products</h1>
+    <ul>
+        {{#each products}}
+        <li>{{this.title}} - ${{this.price}}</li>
+        {{/each}}
+    </ul>
+
+    <script>
+        const socket = io();
+        
+        socket.on("newProduct", (product) => {
+            const listItem = document.createElement("li");
+            listItem.textContent = `${product.title} - $${product.price}`;
+            document.querySelector("ul").appendChild(listItem);
+        });
+
+        socket.on("deleteProduct", (productId) => {
+            const listItem = document.querySelector(`li[data-id="${productId}"]`);
+            if (listItem) {
+                listItem.remove();
+            }
+        });
+    </script>
+</body>
+</html>
